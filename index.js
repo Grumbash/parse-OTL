@@ -14,9 +14,6 @@ async function getPic() {
   await page.waitForSelector(".flat-grid-cell>.app-nav-item svg[data-icon='navi_ledgerclock']")
   await page.click(".flat-grid-cell>.app-nav-item svg[data-icon='navi_ledgerclock']");
 
-  // Find a row and conent in column in the row
-  // const table = document.querySelector("table[summary='Search Results:Time Cards'] > colgroup[span] + tbody > tr:first-child");
-  // table.querySelector("tr:nth-child(1)").childNodes[9].querySelector("span[class='x2qb']") // View Summary column
 
 }
 

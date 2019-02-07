@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Grumbash/parse-OTL#readme",
   "dependencies": {
     "dotenv": "^6.2.0",
+    "moment": "^2.24.0",
     "mongoose": "^5.4.1",
     "puppeteer": "^1.12.2"
   },
