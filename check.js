@@ -1,5 +1,5 @@
-import compareDates from "./shared/dateCompare";
+import compareDates from "./controllers/compareData";
 
-const diff = compareDates('1/26/19 - 2/1/19');
+const diff = compareDates(new Date());
 
 console.log(diff);

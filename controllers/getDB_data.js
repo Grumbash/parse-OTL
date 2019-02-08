@@ -1,0 +1,1 @@
+export default () => ({ period: "2/2/19 - 2/8/19", status: "Woops!" })
