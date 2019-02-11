@@ -1,9 +1,8 @@
-import { Schema, model } from "mongoose";
+const { Schema, model } = require("mongoose");
 
 const UserSchema = new Schema({
   name: String,
   period: [{
-    No: Number,
     from: Date,
     to: Date,
     projects: [{
@@ -14,4 +13,4 @@ const UserSchema = new Schema({
   }]
 });
 
-export default UserSchema = model("users", UserSchema, "users");
+module.exports = UserSchema = model("users", UserSchema, "users");
