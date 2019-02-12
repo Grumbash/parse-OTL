@@ -1,11 +1,11 @@
-const parsing = require('./src/parsing');
 require('dotenv/config');
+const asyncStart = require("./asyncStart");
 
-console.log("Parsing start");
-// Parsing for one user 
-const result = await parsing({
-  URL: process.env.URL,
+const { URL } = process.env;
+const users = [{
   USER_NAME: process.env.USER_NAME,
   USER_PASSWORD: process.env.USER_PASSWORD
-});
-console.log(result);
+}];
+
+asyncStart(users, URL);
+

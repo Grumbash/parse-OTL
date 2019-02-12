@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/Grumbash/parse-OTL#readme",
   "dependencies": {
+    "cmd": "^0.1.0",
+    "cron": "^1.6.0",
     "dotenv": "^6.2.0",
     "moment": "^2.24.0",
     "mongoose": "^5.4.1",

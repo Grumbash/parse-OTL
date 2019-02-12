@@ -1,1 +1,1 @@
-module.exports = () => ({ period: "2/2/19 - 2/8/19", status: "Woops!" })
+module.exports = (weekNo) => ({ from: "2/2/19", to: "2/8/19", status: "Woops!" });

@@ -5,6 +5,7 @@ const UserSchema = new Schema({
   period: [{
     from: Date,
     to: Date,
+    status: String,
     projects: [{
       PO: Number,
       name: String,
