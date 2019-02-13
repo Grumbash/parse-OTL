@@ -5,7 +5,7 @@ const getDataFromExpandTable = require("./getDataFromExpandTable");
 
 module.exports = async (weekNo, page) => {
   try {
-    const DB_data = await getDB_data(weekNo)
+    const DB_data = await getDB_data(weekNo);
     const OTL_data = await getOTL_data(page, weekNo);
 
     // Compare status and week range

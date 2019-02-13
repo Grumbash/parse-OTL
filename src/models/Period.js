@@ -1,4 +1,4 @@
-const { Schema, model, SchemaTypes } = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 const PeriodSchema = new Schema({
   week: Number,
@@ -6,4 +6,4 @@ const PeriodSchema = new Schema({
   to: Date,
 });
 
-module.exports = PeriodSchema = model("periods", PeriodSchema, "periods");
+module.exports = Period = model("periods", PeriodSchema, "periods");

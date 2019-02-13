@@ -1,8 +1,11 @@
 const { Schema, model } = require("mongoose");
 
 const UserSchema = new Schema({
-  name: String,
-  period: [{
+  name: {
+    type: String,
+    required: true
+  },
+  periods: [{
     from: Date,
     to: Date,
     status: String,
@@ -14,4 +17,4 @@ const UserSchema = new Schema({
   }]
 });
 
-module.exports = UserSchema = model("users", UserSchema, "users");
+module.exports = User = model("users", UserSchema, "users");
