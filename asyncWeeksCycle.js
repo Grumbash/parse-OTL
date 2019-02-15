@@ -1,25 +1,26 @@
 const parsingMonth = require('./src/parsing');
+const parsingAll = require('./src/parsing');
 const User = require("./src/models/User");
 
 module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
   console.log("Parsing start");
   try {
-    const user = await User.findOne({ name: USER_NAME });
-    if (user.period.length === 0) {
+
+    let user = await User.findOne({ name: USER_NAME });
+    if (!user) {
       // get All info
-      const weekNo = 1;
       const userToUpdate = {
         name: USER_NAME,
-        period: await parsingAll({
+        periods: await parsingAll({
           URL,
           USER_NAME,
           USER_PASSWORD
-        }, weekNo)
+        })
       }
 
       const result = await new User(userToUpdate).save();
 
-      console.log(result);
+      console.log("-------------  New user  -------------")
 
       return result;
 
@@ -27,7 +28,7 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
       // get Last month info
       const userToUpdate = {
         name: USER_NAME,
-        period: await parsingMonth({
+        periods: await parsingMonth({
           URL,
           USER_NAME,
           USER_PASSWORD
@@ -38,7 +39,7 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
 
       const result = await User.findById(user.id);
 
-      console.log(result);
+      console.log("-------------  Updated user  -------------");
 
       return result;
     }

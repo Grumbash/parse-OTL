@@ -1,1 +1,0 @@
-module.exports = (weekNo) => ({ from: "2/2/19", to: "2/8/19", status: "Woops!" });
