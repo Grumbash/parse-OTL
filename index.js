@@ -1,23 +1,52 @@
-import puppeteer from 'puppeteer';
-import 'dotenv/config';
-import { setTextInputValue } from "./shared/setInputTextValue";
+require('dotenv/config');
 
-async function getPic() {
-  const browser = await puppeteer.launch({ headless: false, args: ['--window-size=1920,1080'] });
-  const page = await browser.newPage();
-  await page.goto(process.env.URL, {
-    waitUntil: ['networkidle0', "domcontentloaded"]
-  });
-  await setTextInputValue(page, `input#sso_username`, process.env.USER_NAME);
-  await setTextInputValue(page, `input#ssopassword`, process.env.USER_PASSWORD);
-  await page.click("a[href='javascript:doLogin(document.LoginForm);']");
-  await page.waitForSelector(".flat-grid-cell>.app-nav-item svg[data-icon='navi_ledgerclock']")
-  await page.click(".flat-grid-cell>.app-nav-item svg[data-icon='navi_ledgerclock']");
+const CronJob = require('cron').CronJob;
+const startParsing = require("./asyncWeeksCycle");
+const mongoose = require("mongoose");
 
-  // Find a row and conent in column in the row
-  // const table = document.querySelector("table[summary='Search Results:Time Cards'] > colgroup[span] + tbody > tr:first-child");
-  // table.querySelector("tr:nth-child(1)").childNodes[9].querySelector("span[class='x2qb']") // View Summary column
+const { URL } = process.env;
+const users = [
+  {
+    USER_NAME: process.env.USER_NAME,
+    USER_PASSWORD: process.env.USER_PASSWORD
+  }, {
+    USER_NAME: process.env.USER_NAME_2,
+    USER_PASSWORD: process.env.USER_PASSWORD_2
+  }
+];
 
-}
 
-getPic();
+mongoose.Promise = Promise;
+mongoose.set("debug", true);
+
+mongoose
+  .connect(
+    process.env.DB_URL,
+    {
+      useNewUrlParser: true
+    }
+  )
+  .then(
+    () => console.log("MongoDB Connected")
+  )
+  .catch(
+    err => console.log(err)
+  );
+
+const randomSec = "00",
+  randomMin = "*/5",
+  randonHour = "*",
+  daysOfWeek = "*"
+const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWeek}`, async () => {
+  for (const user of users) {
+    try {
+      await startParsing(user, URL);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+});
+
+
+
+job.start();
