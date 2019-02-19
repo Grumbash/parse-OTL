@@ -9,23 +9,28 @@ module.exports = async ({ page, selector }, periodId) => {
       return rows.map(row => {
         const childrenCollection = [...row.children];
         // Sturucture data to send in DB
-        return {
+        const project = {
           PO: childrenCollection[0].textContent.split(" - ")[0],
           name: childrenCollection[0].textContent.split(" - ")[1],
           days: childrenCollection.slice(2, 9).map(elem => !!+elem.textContent ? +elem.textContent : 0),
-          total: +childrenCollection[10].textContent
+          total: +childrenCollection[9].textContent
+        };
+        if (!project.total) {
+          project.total = project.days.reduce((accum, current) => accum + current)
         }
+        return project;
       });
     }, selector);
     const ids = [];
     for (const project of projects) {
-      const dbProject = await ProjectModel.findOne({ PO: project.PO, period: periodId })
+      const dbProject = await ProjectModel.findOne({ PO: project.PO, period: periodId });
       if (dbProject) {
         await ProjectModel.findByIdAndUpdate(dbProject.id, { ...project, period: periodId })
         const modifiedProject = await ProjectModel.findById(dbProject.id);
         ids.push(modifiedProject)
+      } else {
+        ids.push(await new ProjectModel({ ...project, period: periodId }).save())
       }
-      ids.push(await new ProjectModel({ ...project, period: periodId }).save())
     }
     return ids;
   } catch (error) {
