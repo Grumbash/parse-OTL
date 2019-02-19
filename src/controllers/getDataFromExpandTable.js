@@ -1,7 +1,9 @@
-module.exports = async ({ page, selector }) => {
+const ProjectModel = require("../models/Project");
+
+module.exports = async ({ page, selector }, periodId) => {
   try {
     await page.waitForSelector(selector, { visible: true });
-    return await page.evaluate(selec => {
+    const projects = await page.evaluate(selec => {
       // Get rows from first table 
       const rows = [...document.querySelectorAll(selec)];
       return rows.map(row => {
@@ -15,6 +17,11 @@ module.exports = async ({ page, selector }) => {
         }
       });
     }, selector);
+    const ids = [];
+    for (const project of projects) {
+      ids.push(await new ProjectModel({ ...project, period: periodId }).save())
+    }
+    return ids;
   } catch (error) {
     console.log(error);
   }

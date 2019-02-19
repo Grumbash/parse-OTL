@@ -1,9 +1,9 @@
 const puppeteer = require('puppeteer');
 const { setTextInputValue } = require("./shared/setInputTextValue");
 const moment = require("moment");
-const asyncProcessArray = require("./shared/asyncProcessArray");
+const asyncProcessArray = require("./controllers/asyncProcessArray");
 
-async function parsing({ URL, USER_NAME, USER_PASSWORD }) {
+async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
   try {
     const browser = await puppeteer.launch({
       headless: false, defaultViewport: {
@@ -44,7 +44,7 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }) {
 
     const weeks = await page.evaluate(() => [...document.querySelectorAll("table[summary='Search Results:Time Cards'] > tbody > tr")]);
 
-    const periods = await asyncProcessArray(page, weeks);
+    const periods = await asyncProcessArray(page, weeks, userId);
 
     browser.close();
     console.log("-=================================== PERIODS START ===================================-");

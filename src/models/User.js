@@ -7,14 +7,8 @@ const UserSchema = new Schema(
       required: true
     },
     periods: [{
-      from: String,
-      to: String,
-      status: String,
-      projects: [{
-        PO: Number,
-        name: String,
-        days: [Number]
-      }]
+      type: "ObjectId",
+      ref: "periods"
     }]
   },
   {

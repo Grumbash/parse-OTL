@@ -9,16 +9,18 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
     let user = await User.findOne({ name: USER_NAME });
     if (!user) {
       // get All info
+      const newUser = await new User({ name: USER_NAME }).save();
       const userToUpdate = {
         name: USER_NAME,
         periods: await parsingAll({
           URL,
           USER_NAME,
           USER_PASSWORD
-        })
+        }, newUser.id)
       }
 
-      const result = await new User(userToUpdate).save();
+      await User.findByIdAndUpdate(newUser.id, userToUpdate);
+      const result = await User.findById(newUser.id);
 
       console.log("-------------  New user  -------------")
 
@@ -32,7 +34,7 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
           URL,
           USER_NAME,
           USER_PASSWORD
-        })
+        }, user.id)
       }
 
       await User.findByIdAndUpdate(user.id, userToUpdate);
