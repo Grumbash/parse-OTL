@@ -9,8 +9,16 @@ module.exports = async (page, indx, userId) => {
     await page.waitForSelector(fullInfoSelector, { visible: true });
 
     const OTL_data = await getOTL_data(page, indx);
+    const dbPeriod = await PeriodModel.findOne({ user: userId, from: OTL_data.from });
 
-    const newPeriod = await new PeriodModel({ ...OTL_data, user: userId }).save();
+    let newPeriod = null;
+
+    if (!!dbPeriod) {
+      newPeriod = dbPeriod;
+    } else {
+      newPeriod = await new PeriodModel({ ...OTL_data, user: userId }).save();
+    }
+
     // Go to full info table
     await page.evaluate((selector) => {
       const toClick = document.querySelector(selector);

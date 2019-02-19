@@ -13,12 +13,18 @@ module.exports = async ({ page, selector }, periodId) => {
           PO: childrenCollection[0].textContent.split(" - ")[0],
           name: childrenCollection[0].textContent.split(" - ")[1],
           days: childrenCollection.slice(2, 9).map(elem => !!+elem.textContent ? +elem.textContent : 0),
-          total: +childrenCollection[9].textContent
+          total: +childrenCollection[10].textContent
         }
       });
     }, selector);
     const ids = [];
     for (const project of projects) {
+      const dbProject = await ProjectModel.findOne({ PO: project.PO, period: periodId })
+      if (dbProject) {
+        await ProjectModel.findByIdAndUpdate(dbProject.id, { ...project, period: periodId })
+        const modifiedProject = await ProjectModel.findById(dbProject.id);
+        ids.push(modifiedProject)
+      }
       ids.push(await new ProjectModel({ ...project, period: periodId }).save())
     }
     return ids;
