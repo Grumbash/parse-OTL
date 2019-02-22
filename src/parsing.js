@@ -1,3 +1,5 @@
+require('dotenv/config');
+
 const puppeteer = require('puppeteer');
 const { setTextInputValue } = require("./shared/setInputTextValue");
 const moment = require("moment");
@@ -6,18 +8,24 @@ const asyncProcessArray = require("./controllers/asyncProcessArray");
 async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
   try {
     const browser = await puppeteer.launch({
-      headless: true, defaultViewport: {
+      headless: false, defaultViewport: {
         width: 1920,
         height: 1080
       }, args: ['--window-size=1920,1080']
     });
     const page = await browser.newPage();
     page.setDefaultTimeout(90000);
-    await page.goto(URL, {
+    await page.goto(process.env.URL_TO_PARSE, {
       waitUntil: ['networkidle0', "domcontentloaded"]
     });
-    console.log(USER_NAME)
-
+    await setTextInputValue(page, `input#username`, process.env.VPN_USER_NAME);
+    await setTextInputValue(page, `input#password_input`, process.env.VPN_USER_PASSWORD);
+    await page.click("input[type='submit']");
+    await page.waitForSelector("input#unicorn_form_url", { visible: true });
+    await setTextInputValue(page, `input#unicorn_form_url`, URL);
+    await page.click("span#browse_text");
+    await page.waitForNavigation({ waitUntil: 'domcontentloaded' })
+    await page.waitForSelector("input#sso_username", { visible: true });
     await setTextInputValue(page, `input#sso_username`, USER_NAME);
     await setTextInputValue(page, `input#ssopassword`, USER_PASSWORD);
     await page.click("a[href='javascript:doLogin(document.LoginForm);']");

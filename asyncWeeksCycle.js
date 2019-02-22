@@ -22,7 +22,7 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
       await User.findByIdAndUpdate(newUser.id, userToUpdate);
       const result = await User.findById(newUser.id);
 
-      console.log("-------------  New user  -------------")
+      console.log("-------------  Created new user  -------------")
 
       return result;
 
