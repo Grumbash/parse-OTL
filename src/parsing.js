@@ -6,7 +6,7 @@ const asyncProcessArray = require("./controllers/asyncProcessArray");
 async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
   try {
     const browser = await puppeteer.launch({
-      headless: false, defaultViewport: {
+      headless: true, defaultViewport: {
         width: 1920,
         height: 1080
       }, args: ['--window-size=1920,1080']
@@ -54,6 +54,7 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
 
   } catch (error) {
     console.error(error);
+    return [];
   }
 }
 

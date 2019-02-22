@@ -41,5 +41,6 @@ module.exports = async (page, indx, userId) => {
     return id;
   } catch (error) {
     console.log(error);
+    return '';
   }
 }

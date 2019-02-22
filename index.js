@@ -3,6 +3,7 @@ require('dotenv/config');
 const CronJob = require('cron').CronJob;
 const startParsing = require("./asyncWeeksCycle");
 const mongoose = require("mongoose");
+const CredModel = require("./src/models/Cred");
 
 const { URL } = process.env;
 const users = [
@@ -38,14 +39,26 @@ const randomSec = "00",
   randonHour = "*",
   daysOfWeek = "*"
 const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWeek}`, async () => {
+  // const users = await CredModel.find({});
+  // for (const user of users) {
+  //   try {
+  //     await startParsing({ USER_NAME: user.login, USER_PASSWORD: user.password }, URL);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+});
+
+(async () => {
+  const users = await CredModel.find({});
   for (const user of users) {
     try {
-      await startParsing(user, URL);
+      await startParsing({ USER_NAME: user.login, USER_PASSWORD: user.password }, URL);
     } catch (error) {
       console.log(error);
     }
   }
-});
+})()
 
 
 

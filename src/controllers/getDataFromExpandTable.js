@@ -35,5 +35,6 @@ module.exports = async ({ page, selector }, periodId) => {
     return ids;
   } catch (error) {
     console.log(error);
+    return [];
   }
 }
