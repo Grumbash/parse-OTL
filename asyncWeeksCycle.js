@@ -18,7 +18,8 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
           USER_PASSWORD
         }, newUser.id)
       }
-
+      const userOld = await User.findById(newUser.id)
+      userToUpdate.periods = [...userToUpdate.periods, ...userOld.periods]
       await User.findByIdAndUpdate(newUser.id, userToUpdate);
       const result = await User.findById(newUser.id);
 
@@ -36,6 +37,9 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
           USER_PASSWORD
         }, user.id)
       }
+
+      const userOld = await User.findById(newUser.id)
+      userToUpdate.periods = [...userToUpdate.periods, ...userOld.periods]
 
       await User.findByIdAndUpdate(user.id, userToUpdate);
 

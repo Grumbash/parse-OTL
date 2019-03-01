@@ -24,6 +24,7 @@
     "dotenv": "^6.2.0",
     "moment": "^2.24.0",
     "mongoose": "^5.4.1",
+    "node-cmd": "^3.0.0",
     "puppeteer": "^1.12.2"
   },
   "devDependencies": {
