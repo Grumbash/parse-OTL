@@ -4,6 +4,7 @@ const CronJob = require('cron').CronJob;
 const startParsing = require("./asyncWeeksCycle");
 const mongoose = require("mongoose");
 const CredModel = require("./src/models/Cred");
+const finishOutput = require("./src/shared/consoleOutput")
 
 const { URL } = process.env;
 const users = [
@@ -57,7 +58,9 @@ const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWee
     } catch (error) {
       console.log(error);
     }
+
   }
+  console.log(finishOutput)
 })()
 
 

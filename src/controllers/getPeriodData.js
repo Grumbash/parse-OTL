@@ -2,13 +2,13 @@ const getOTL_data = require("./getOTL_data");
 const getDataFromExpandTable = require("./getDataFromExpandTable");
 const PeriodModel = require("../models/Period");
 
-module.exports = async (page, indx, userId) => {
+module.exports = async (page, weekNo, userId) => {
   try {
-    const periodNo = indx + 1;
+    const periodNo = weekNo + 1;
     const fullInfoSelector = `table[summary='Search Results:Time Cards'] > colgroup[span] + tbody > tr:nth-child(${(periodNo)}) > td:nth-child(10) > span > a`;
     await page.waitForSelector(fullInfoSelector, { visible: true });
 
-    const OTL_data = await getOTL_data(page, indx);
+    const OTL_data = await getOTL_data(page, weekNo);
     const dbPeriod = await PeriodModel.findOne({ user: userId, from: OTL_data.from });
 
     let newPeriod = null;

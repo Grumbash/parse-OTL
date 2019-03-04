@@ -46,14 +46,14 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     await page.waitFor(5000);
 
     const weeks = await page.evaluate(() => [...document.querySelectorAll("table[summary='Search Results:Time Cards'] > tbody > tr")]);
+    let periods = [];
+    if (weeks.length) {
+      periods = await asyncProcessArray(page, weeks, userId);
+    }
 
-    const periods = await asyncProcessArray(page, weeks, userId);
 
     await cmd(process.env.CMD_COMMAND_START);
     browser.close();
-    console.log("-=================================== PERIODS START ===================================-");
-    console.log(periods);
-    console.log("-=================================== PERIODS END ===================================-");
     return periods;
 
   } catch (error) {
