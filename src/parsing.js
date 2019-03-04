@@ -52,12 +52,12 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     }
 
 
-    await cmd(process.env.CMD_COMMAND_START);
+    await cmd(process.env.CMD_COMMAND_STOP);
     browser.close();
     return periods;
 
   } catch (error) {
-    await cmd(process.env.CMD_COMMAND_START);
+    await cmd(process.env.CMD_COMMAND_STOP);
     browser.close();
     console.error(error);
     return [];
