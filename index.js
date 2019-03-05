@@ -19,7 +19,6 @@ const users = [
 
 
 mongoose.Promise = Promise;
-mongoose.set("debug", true);
 
 mongoose
   .connect(

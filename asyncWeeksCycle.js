@@ -5,8 +5,8 @@ const User = require("./src/models/User");
 module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
   console.log("Parsing start");
   try {
-
     let user = await User.findOne({ name: USER_NAME });
+
     if (!user) {
       // get All info
       const user = await new User({ name: USER_NAME }).save();
@@ -18,12 +18,11 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
           USER_PASSWORD
         }, user.id)
       }
-      const userOld = await User.findById(user.id)
-      userToUpdate.periods = [...userToUpdate.periods, ...userOld.periods]
+
       await User.findByIdAndUpdate(user.id, userToUpdate);
       const result = await User.findById(user.id);
 
-      console.log("-------------  Created new user  -------------")
+      console.log("-------------  User has being created  -------------")
 
       return result;
 
@@ -38,14 +37,22 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
         }, user.id)
       }
 
-      const userOld = await User.findById(user.id)
-      userToUpdate.periods = [...userToUpdate.periods, ...userOld.periods]
+      const userOld = await User.findById(user.id);
+
+      userToUpdate.periods = [...userToUpdate.periods, ...userOld.periods].filter((elem, index, self) => {
+        return index === self.findIndex((t) => (
+          t.id == elem.id
+        ))
+      }
+      );
+
+      console.log(userToUpdate.periods);
 
       await User.findByIdAndUpdate(user.id, userToUpdate);
 
       const result = await User.findById(user.id);
 
-      console.log("-------------  Updated user  -------------");
+      console.log("-------------  User has being updated  -------------");
 
       return result;
     }

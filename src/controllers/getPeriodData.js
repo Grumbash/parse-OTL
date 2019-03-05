@@ -6,7 +6,7 @@ module.exports = async (page, weekNo, userId) => {
   try {
     const periodNo = weekNo + 1;
     const fullInfoSelector = `table[summary='Search Results:Time Cards'] > colgroup[span] + tbody > tr:nth-child(${(periodNo)}) > td:nth-child(10) > span > a`;
-    await page.waitForSelector(fullInfoSelector, { visible: true });
+    await page.waitForSelector(fullInfoSelector, { visible: true, timeout: 10000 });
 
     const OTL_data = await getOTL_data(page, weekNo);
     const dbPeriod = await PeriodModel.findOne({ user: userId, from: OTL_data.from });
