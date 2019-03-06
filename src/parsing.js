@@ -4,7 +4,6 @@ const puppeteer = require('puppeteer');
 const { setTextInputValue } = require("./shared/setInputTextValue");
 const moment = require("moment");
 const asyncProcessArray = require("./controllers/asyncProcessArray");
-const cmd = require("./shared/cmdPromise");
 
 async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
   const browser = await puppeteer.launch({
@@ -14,7 +13,6 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     }, args: ['--window-size=1920,1080']
   });
   try {
-    await cmd(process.env.CMD_COMMAND_START);
     const page = await browser.newPage();
     page.setDefaultTimeout(90000);
     await page.goto(URL, {
@@ -29,7 +27,7 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
 
     // Code below for picking data in particular period 
 
-    const firstDayOfMonth = moment(new Date).startOf('year').format("MM/DD/YY");
+    const firstDayOfMonth = moment(new Date).startOf('month').format("MM/DD/YY");
     const lastDayOfMonth = moment(new Date).endOf('month').format("MM/DD/YY");
     await page.waitForSelector("tr[style] > td:nth-child(3) > button", { visible: true });
     await page.evaluate((({ firstDayOfMonth, lastDayOfMonth }) => {
@@ -54,12 +52,10 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     }
 
 
-    await cmd(process.env.CMD_COMMAND_STOP);
     browser.close();
     return periods;
 
   } catch (error) {
-    await cmd(process.env.CMD_COMMAND_STOP);
     browser.close();
     console.error(error);
     return [];

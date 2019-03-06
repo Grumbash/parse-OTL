@@ -5,6 +5,7 @@ const startParsing = require("./asyncWeeksCycle");
 const mongoose = require("mongoose");
 const CredModel = require("./src/models/Cred");
 const finishOutput = require("./src/shared/consoleOutput")
+const cmd = require("./src/shared/cmdPromise");
 
 const { URL } = process.env;
 const users = [
@@ -51,14 +52,17 @@ const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWee
 
 (async () => {
   const users = await CredModel.find({});
+  await cmd(process.env.CMD_COMMAND_START);
   for (const user of users) {
     try {
       await startParsing({ USER_NAME: user.login, USER_PASSWORD: user.password }, URL);
     } catch (error) {
+
       console.log(error);
     }
 
   }
+  await cmd(process.env.CMD_COMMAND_STOP);
   console.log(finishOutput)
 })()
 

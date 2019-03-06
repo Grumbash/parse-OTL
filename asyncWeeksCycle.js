@@ -22,7 +22,7 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
       await User.findByIdAndUpdate(user.id, userToUpdate);
       const result = await User.findById(user.id);
 
-      console.log("-------------  User has being created  -------------")
+      console.log(`-------------  User ${result.name} has been created  -------------`)
 
       return result;
 
@@ -38,21 +38,17 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
       }
 
       const userOld = await User.findById(user.id);
-
-      userToUpdate.periods = [...userToUpdate.periods, ...userOld.periods].filter((elem, index, self) => {
-        return index === self.findIndex((t) => (
-          t.id == elem.id
-        ))
-      }
-      );
+      const arrOfPeriods = [...userToUpdate.periods, ...userOld.periods];
+      userToUpdate.periods = arrOfPeriods.filter((periodId, index, self) => index === self.findIndex((innerPeriodId) => innerPeriodId == periodId));
 
       console.log(userToUpdate.periods);
+      console.log(arrOfPeriods);
 
       await User.findByIdAndUpdate(user.id, userToUpdate);
 
       const result = await User.findById(user.id);
 
-      console.log("-------------  User has being updated  -------------");
+      console.log(`-------------  User ${result.name} has been updated  -------------`);
 
       return result;
     }
