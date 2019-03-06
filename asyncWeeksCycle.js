@@ -41,9 +41,6 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
       const arrOfPeriods = [...userToUpdate.periods, ...userOld.periods];
       userToUpdate.periods = arrOfPeriods.filter((periodId, index, self) => index === self.findIndex((innerPeriodId) => innerPeriodId == periodId));
 
-      console.log(userToUpdate.periods);
-      console.log(arrOfPeriods);
-
       await User.findByIdAndUpdate(user.id, userToUpdate);
 
       const result = await User.findById(user.id);
