@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer');
 const { setTextInputValue } = require("./shared/setInputTextValue");
 const moment = require("moment");
 const asyncProcessArray = require("./controllers/asyncProcessArray");
+const logger = require("../logger");
 
 async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
   const browser = await puppeteer.launch({
@@ -57,7 +58,7 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
 
   } catch (error) {
     browser.close();
-    console.error(error);
+    logger.error(error);
     return [];
   }
 }

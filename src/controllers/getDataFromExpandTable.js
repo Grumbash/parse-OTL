@@ -1,4 +1,5 @@
 const ProjectModel = require("../models/Project");
+const logger = require("../../logger");
 
 module.exports = async ({ page, selector }, periodId) => {
   try {
@@ -34,7 +35,7 @@ module.exports = async ({ page, selector }, periodId) => {
     }
     return ids;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return [];
   }
 }

@@ -6,21 +6,11 @@ const mongoose = require("mongoose");
 const CredModel = require("./src/models/Cred");
 const finishOutput = require("./src/shared/consoleOutput")
 const cmd = require("./src/shared/cmdPromise");
+const logger = require("./logger");
 
 const { URL } = process.env;
-const users = [
-  {
-    USER_NAME: process.env.USER_NAME,
-    USER_PASSWORD: process.env.USER_PASSWORD
-  }, {
-    USER_NAME: process.env.USER_NAME_2,
-    USER_PASSWORD: process.env.USER_PASSWORD_2
-  }
-];
-
 
 mongoose.Promise = Promise;
-
 mongoose
   .connect(
     process.env.DB_URL,
@@ -29,10 +19,10 @@ mongoose
     }
   )
   .then(
-    () => console.log("MongoDB Connected")
+    () => logger.info({ message: "MongoDB Connected" })
   )
   .catch(
-    err => console.log(err)
+    err => logger.error(err)
   );
 
 const randomSec = "00",
@@ -40,14 +30,7 @@ const randomSec = "00",
   randonHour = "*",
   daysOfWeek = "*"
 const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWeek}`, async () => {
-  // const users = await CredModel.find({});
-  // for (const user of users) {
-  //   try {
-  //     await startParsing({ USER_NAME: user.login, USER_PASSWORD: user.password }, URL);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+
 });
 
 (async () => {
@@ -58,12 +41,12 @@ const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWee
       await startParsing({ USER_NAME: user.login, USER_PASSWORD: user.password }, URL);
     } catch (error) {
 
-      console.log(error);
+      logger.error(error);
     }
 
   }
   await cmd(process.env.CMD_COMMAND_STOP);
-  console.log(finishOutput)
+  logger.info({ message: finishOutput })
 })()
 
 

@@ -1,3 +1,5 @@
+const logger = require("../../logger");
+
 module.exports = async (page, firtsRow = 0) => {
   try {
     await page.waitForSelector("table[summary='Search Results:Time Cards'] > colgroup[span] + tbody");
@@ -14,7 +16,7 @@ module.exports = async (page, firtsRow = 0) => {
       }
     }, firtsRow);
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return {
       from: "failed to connect",
       to: "failed to connect",

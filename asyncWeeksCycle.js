@@ -1,9 +1,10 @@
 const parsingMonth = require('./src/parsing');
 const parsingAll = require('./src/parsing');
 const User = require("./src/models/User");
+const logger = require("./logger");
 
 module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
-  console.log("Parsing start");
+  logger.info({ message: "Parsing start" });
   try {
     let user = await User.findOne({ name: USER_NAME });
 
@@ -22,7 +23,7 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
       await User.findByIdAndUpdate(user.id, userToUpdate);
       const result = await User.findById(user.id);
 
-      console.log(`-------------  User ${result.name} has been created  -------------`)
+      logger.info({ message: `User ${result.name} has been created` })
 
       return result;
 
@@ -45,13 +46,13 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
 
       const result = await User.findById(user.id);
 
-      console.log(`-------------  User ${result.name} has been updated  -------------`);
+      logger.info({ message: `User ${result.name} has been updated` });
 
       return result;
     }
 
 
   } catch (error) {
-    console.log(error)
+    logger.error(error)
   }
 }

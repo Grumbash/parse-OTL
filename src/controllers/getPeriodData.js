@@ -1,6 +1,7 @@
 const getOTL_data = require("./getOTL_data");
 const getDataFromExpandTable = require("./getDataFromExpandTable");
 const PeriodModel = require("../models/Period");
+const logger = require("../../logger");
 
 module.exports = async (page, weekNo, userId) => {
   try {
@@ -40,7 +41,7 @@ module.exports = async (page, weekNo, userId) => {
     const { id } = await PeriodModel.findByIdAndUpdate(newPeriod.id, period)
     return id;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return '';
   }
 }
