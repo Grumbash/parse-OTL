@@ -8,7 +8,7 @@ const logger = require("../logger");
 
 async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
   const browser = await puppeteer.launch({
-    headless: true, defaultViewport: {
+    headless: false, defaultViewport: {
       width: 1920,
       height: 1080
     }, args: ['--window-size=1920,1080']
@@ -53,11 +53,11 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     }
 
 
-    browser.close();
+    // browser.close();
     return periods;
 
   } catch (error) {
-    browser.close();
+    // browser.close();
     logger.error(error);
     return [];
   }
