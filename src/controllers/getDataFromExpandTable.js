@@ -3,29 +3,20 @@ const logger = require("../../logger");
 
 module.exports = async ({ page, selector }, periodId) => {
   try {
+    await page.waitForSelector(selector, { visible: true });
     const headersSelector = 'table[summary="This table contains column headers corresponding to the data body table below"]';
-    await page.waitForSelector(headersSelector);
 
     // Get metadata from tabel-header
-    const headers = await page.evaluate((async (headersSelector) => {
-      const table = await document.querySelectorAll(headersSelector)[1];
-
-      console.log(headersSelector)
-      console.log(table)
-      const tableHeaders = [...table.children[1].children[1].children]
-      return tableHeaders;
-    }), (headersSelector));
+    const headers = await page.evaluate((headersSelector) => [...document.querySelectorAll(headersSelector)[1].children[1].children[1].children].map(child => ({ name: child.textContent, index: child.getAttribute("_d_index") })), headersSelector);
 
     const fieldsOrder = {
-      project: +headers.find(elem => elem.textContent.trim().toUpperCase() === "project".toUpperCase()).getAttribute("_d_index"),
-      daysFrom: +headers.find(elem => elem.textContent.trim().toUpperCase() === "days".toUpperCase()).getAttribute("_d_index"),
-      daysTo: +headers.find(elem => elem.textContent.trim().toUpperCase() === "days".toUpperCase()).getAttribute("_d_index") + 7,
-      total: +headers.find(elem => elem.textContent.trim().toUpperCase() === "Time Entry Total Hours".toUpperCase()).getAttribute("_d_index"),
-
+      project: +headers.find(elem => elem.name.trim().toUpperCase() === "project".toUpperCase()).index,
+      daysFrom: +headers.find(elem => elem.name.trim().toUpperCase() === "days".toUpperCase()).index,
+      daysTo: +headers.find(elem => elem.name.trim().toUpperCase() === "days".toUpperCase()).index + 7,
+      total: +headers.find(elem => elem.name.trim().toUpperCase() === "Time Entry Total Hours".toUpperCase()).index,
     }
 
-    await page.waitForSelector(selector, { visible: true });
-    const projects = await page.evaluate(selec => {
+    const projects = await page.evaluate(({ selec, fieldsOrder }) => {
       // Get rows from first table 
       const rows = [...document.querySelectorAll(selec)];
       return rows.map(row => {
@@ -42,7 +33,8 @@ module.exports = async ({ page, selector }, periodId) => {
         }
         return project;
       });
-    }, selector);
+    }, ({ selec: selector, fieldsOrder }));
+
     const ids = [];
     for (const project of projects) {
       const dbProject = await ProjectModel.findOne({ PO: project.PO, period: periodId });

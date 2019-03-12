@@ -8,7 +8,7 @@ const logger = require("../logger");
 
 async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
   const browser = await puppeteer.launch({
-    headless: false, defaultViewport: {
+    headless: true, defaultViewport: {
       width: 1920,
       height: 1080
     }, args: ['--window-size=1920,1080']
@@ -28,7 +28,7 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
 
     // Code below for picking data in particular period 
 
-    const firstDayOfMonth = moment(new Date).startOf('month').format("MM/DD/YY");
+    const firstDayOfMonth = moment(new Date).startOf('year').format("MM/DD/YY");
     const lastDayOfMonth = moment(new Date).endOf('month').format("MM/DD/YY");
     await page.waitForSelector("tr[style] > td:nth-child(3) > button", { visible: true });
     await page.evaluate((({ firstDayOfMonth, lastDayOfMonth }) => {
@@ -52,12 +52,11 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
       periods = await asyncProcessArray(page, weeks, userId);
     }
 
-
-    // browser.close();
+    browser.close();
     return periods;
 
   } catch (error) {
-    // browser.close();
+    browser.close();
     logger.error(error);
     return [];
   }
