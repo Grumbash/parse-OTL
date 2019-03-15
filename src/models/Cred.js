@@ -23,6 +23,10 @@ const CredSchema = new Schema({
       type: String
     }
   },
+  role: {
+    default: "user",
+    type: String
+  },
   emailToSubscribe: {
     default: "",
     type: String
