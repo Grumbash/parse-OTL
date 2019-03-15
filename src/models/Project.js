@@ -8,6 +8,10 @@ const ProjectSchema = new Schema(
     },
     PO: Number,
     name: String,
+    uiName: {
+      default: "",
+      type: String
+    },
     days: [Number],
     total: Number
   },

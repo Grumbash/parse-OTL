@@ -38,8 +38,12 @@ module.exports = async ({ page, selector }, periodId) => {
     const ids = [];
     for (const project of projects) {
       const dbProject = await ProjectModel.findOne({ PO: project.PO, period: periodId });
+      const uiNameForProject = await ProjectModel.find({ PO: project.PO }).then(projectsLoc => projectsLoc[0].uiName).catch(error => {
+        console.error(error)
+        logger.error(error);
+      })
       if (dbProject) {
-        await ProjectModel.findByIdAndUpdate(dbProject.id, { ...project, period: periodId })
+        await ProjectModel.findByIdAndUpdate(dbProject.id, { ...project, period: periodId, uiName: uiNameForProject })
         const modifiedProject = await ProjectModel.findById(dbProject.id);
         ids.push(modifiedProject)
       } else {

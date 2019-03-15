@@ -33,13 +33,14 @@ const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWee
 
 });
 
+// Dev mod
 (async () => {
   const users = await CredModel.find({});
 
   await cmd(process.env.CMD_COMMAND_START);
   for (const user of users) {
     try {
-      await startParsing({ USER_NAME: user.login, USER_PASSWORD: user.password }, URL);
+      await startParsing({ USER_NAME: user.sso.login, USER_PASSWORD: user.sso.password }, URL);
     } catch (error) {
 
       logger.error(error);
