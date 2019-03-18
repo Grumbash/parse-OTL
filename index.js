@@ -35,7 +35,7 @@ const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWee
 
 // Dev mod
 (async () => {
-  const users = await CredModel.find({});
+  const users = await CredModel.find({ role: "user" });
 
   await cmd(process.env.CMD_COMMAND_START);
   for (const user of users) {
