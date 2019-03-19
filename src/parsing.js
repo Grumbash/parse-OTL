@@ -7,7 +7,7 @@ const logger = require("../logger");
 
 async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
   const browser = await puppeteer.launch({
-    headless: false, defaultViewport: {
+    headless: true, defaultViewport: {
       width: 1920,
       height: 1080
     }, args: ['--window-size=1920,1080']
@@ -22,18 +22,18 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     await setTextInputValue(page, `input#sso_username`, USER_NAME);
     await setTextInputValue(page, `input#ssopassword`, USER_PASSWORD);
     await page.screenshot({
-      path: 'screenshots/'+ USER_NAME + '.png',
+      path: 'screenshots/' + USER_NAME + '.png',
       fullPage: true
     });
     await page.click("a[href='javascript:doLogin(document.LoginForm);']");
     await page.waitForSelector(".flat-grid-cell>.app-nav-item svg[data-icon='navi_ledgerclock']", { visible: true });
     await page.screenshot({
-      path: 'screenshots/'+ USER_NAME + '_profile.png',
+      path: 'screenshots/' + USER_NAME + '_profile.png',
       fullPage: true
     });
 
     await page.click(".flat-grid-cell>.app-nav-item svg[data-icon='navi_ledgerclock']");
-    
+
     // Code below for picking data in particular period 
 
     const firstDayOfMonth = moment(new Date).startOf('month').format("MM/DD/YY");
@@ -51,11 +51,11 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     }), ({ firstDayOfMonth, lastDayOfMonth }));
 
     const screen = await page.screenshot({
-      path: 'screenshots/listOfPeriod/'+ USER_NAME + '_filterPeriods.png',
+      path: 'screenshots/listOfPeriod/' + USER_NAME + '_filterPeriods.png',
       fullPage: true,
       encoding: "base64"
     });
-  
+
     await page.waitForSelector("table[summary='Search Results:Time Cards'] > tbody > tr", { visible: true });
     await page.waitFor(5000);
 
@@ -66,8 +66,8 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     }
 
     browser.close();
-    
-    return {periods,screen};
+
+    return { periods, screen };
 
   } catch (error) {
     browser.close();

@@ -7,19 +7,20 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
   logger.info({ message: "Parsing start" });
   try {
     let user = await User.findOne({ name: USER_NAME });
-    const parsingRes = await parsingMonth({
+    const parsingRes = async (userInner) => await parsingMonth({
       URL,
       USER_NAME,
       USER_PASSWORD
-    }, user.id);
+    }, userInner.id);
 
     if (!user) {
       // get All info
       const user = await new User({ name: USER_NAME }).save();
+      const res = await parsingRes(user);
       const userToUpdate = {
         name: USER_NAME,
-        periods: parsingRes.periods,
-        screen: parsingRes.screen
+        periods: res.periods,
+        screenshot: res.screen
       }
       await User.findByIdAndUpdate(user.id, userToUpdate);
       const result = await User.findById(user.id);
@@ -30,11 +31,11 @@ module.exports = async ({ USER_NAME, USER_PASSWORD }, URL) => {
 
     } else {
       // get Last month info
-
+      const res = await parsingRes(user);
       const userToUpdate = {
         name: USER_NAME,
-        periods: parsingRes.periods,
-        screenshot: parsingRes.screen
+        periods: res.periods,
+        screenshot: res.screen
       }
 
       const userOld = await User.findById(user.id);
