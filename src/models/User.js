@@ -9,7 +9,8 @@ const UserSchema = new Schema(
     periods: [{
       type: "ObjectId",
       ref: "periods"
-    }]
+    }],
+    screenshot: String
   },
   {
     timestamps: true

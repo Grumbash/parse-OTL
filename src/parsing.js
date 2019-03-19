@@ -1,5 +1,4 @@
 require('dotenv/config');
-
 const puppeteer = require('puppeteer');
 const { setTextInputValue } = require("./shared/setInputTextValue");
 const moment = require("moment");
@@ -8,7 +7,7 @@ const logger = require("../logger");
 
 async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
   const browser = await puppeteer.launch({
-    headless: true, defaultViewport: {
+    headless: false, defaultViewport: {
       width: 1920,
       height: 1080
     }, args: ['--window-size=1920,1080']
@@ -22,10 +21,19 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     await page.waitForSelector("input#sso_username", { visible: true });
     await setTextInputValue(page, `input#sso_username`, USER_NAME);
     await setTextInputValue(page, `input#ssopassword`, USER_PASSWORD);
+    await page.screenshot({
+      path: 'screenshots/'+ USER_NAME + '.png',
+      fullPage: true
+    });
     await page.click("a[href='javascript:doLogin(document.LoginForm);']");
     await page.waitForSelector(".flat-grid-cell>.app-nav-item svg[data-icon='navi_ledgerclock']", { visible: true });
-    await page.click(".flat-grid-cell>.app-nav-item svg[data-icon='navi_ledgerclock']");
+    await page.screenshot({
+      path: 'screenshots/'+ USER_NAME + '_profile.png',
+      fullPage: true
+    });
 
+    await page.click(".flat-grid-cell>.app-nav-item svg[data-icon='navi_ledgerclock']");
+    
     // Code below for picking data in particular period 
 
     const firstDayOfMonth = moment(new Date).startOf('month').format("MM/DD/YY");
@@ -36,24 +44,30 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
       const toInput = document.querySelectorAll("input[id]")[5];
       const searchButton = document.querySelectorAll("td[class] > button[id]")[6];
 
-
       fromInput.value = firstDayOfMonth;
       toInput.value = lastDayOfMonth;
       searchButton.click()
 
     }), ({ firstDayOfMonth, lastDayOfMonth }));
 
+    const screen = await page.screenshot({
+      path: 'screenshots/listOfPeriod/'+ USER_NAME + '_filterPeriods.png',
+      fullPage: true,
+      encoding: "base64"
+    });
+  
     await page.waitForSelector("table[summary='Search Results:Time Cards'] > tbody > tr", { visible: true });
     await page.waitFor(5000);
 
     const weeks = await page.evaluate(() => [...document.querySelectorAll("table[summary='Search Results:Time Cards'] > tbody > tr")]);
     let periods = [];
     if (weeks.length) {
-      periods = await asyncProcessArray(page, weeks, userId);
+      periods = await asyncProcessArray(page, weeks, userId, USER_NAME);
     }
 
     browser.close();
-    return periods;
+    
+    return {periods,screen};
 
   } catch (error) {
     browser.close();

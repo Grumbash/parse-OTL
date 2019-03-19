@@ -9,6 +9,7 @@ const PeriodSchema = new Schema(
     from: String,
     to: String,
     status: String,
+    screenshot: String,
     projects: [{
       type: "ObjectId",
       ref: "projects"

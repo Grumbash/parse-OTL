@@ -1,11 +1,16 @@
 const ProjectModel = require("../models/Project");
 const logger = require("../../logger");
 
-module.exports = async ({ page, selector }, periodId) => {
+module.exports = async ({ page, selector }, periodId, USER_NAME) => {
   try {
     await page.waitForSelector(selector, { visible: true });
     const headersSelector = 'table[summary="This table contains column headers corresponding to the data body table below"]';
-
+    //photo
+    const screen = await page.screenshot({
+      path: 'screenshots/periods/'+ USER_NAME + '_period-' + periodId + '.png',
+      fullPage: true,
+      encoding: 'base64'
+    });
     // Get metadata from tabel-header
     const headers = await page.evaluate((headersSelector) => [...document.querySelectorAll(headersSelector)[1].children[1].children[1].children].map(child => ({ name: child.textContent, index: child.getAttribute("_d_index") })), headersSelector);
 
@@ -50,7 +55,7 @@ module.exports = async ({ page, selector }, periodId) => {
         ids.push(await new ProjectModel({ ...project, period: periodId }).save())
       }
     }
-    return ids;
+    return [ids, screen];
   } catch (error) {
     logger.error(error);
     return [];

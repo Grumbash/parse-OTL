@@ -3,7 +3,7 @@ const getDataFromExpandTable = require("./getDataFromExpandTable");
 const PeriodModel = require("../models/Period");
 const logger = require("../../logger");
 
-module.exports = async (page, weekNo, userId) => {
+module.exports = async (page, weekNo, userId, USER_NAME) => {
   try {
     const periodNo = weekNo + 1;
     const fullInfoSelector = `table[summary='Search Results:Time Cards'] > colgroup[span] + tbody > tr:nth-child(${(periodNo)}) > td:nth-child(10) > span > a`;
@@ -29,7 +29,7 @@ module.exports = async (page, weekNo, userId) => {
 
     // Get data for the week
     const ExpandTableSelector = "table[summary='Time Card Entries'] tr.xeq > td:nth-child(2) tr";
-    const projectsIds = await getDataFromExpandTable({ page, selector: ExpandTableSelector }, newPeriod.id);
+    const [projectsIds, screenshot] = await getDataFromExpandTable({ page, selector: ExpandTableSelector }, newPeriod.id, USER_NAME);
 
     // Go back to main table
     await page.evaluate(() => {
@@ -37,9 +37,10 @@ module.exports = async (page, weekNo, userId) => {
       closeTabSelector.click();
     });
 
-    const period = { ...OTL_data, projects: projectsIds, userId };
+    const period = { ...OTL_data, projects: projectsIds, userId, screenshot};
 
-    const { id } = await PeriodModel.findByIdAndUpdate(newPeriod.id, period)
+    const { id } = await PeriodModel.findByIdAndUpdate(newPeriod.id, period);
+
     return id;
   } catch (error) {
     console.log(error);
