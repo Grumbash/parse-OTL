@@ -1,5 +1,6 @@
 require('dotenv/config');
 const puppeteer = require('puppeteer');
+const mkdirp = require("mkdirp");
 const { setTextInputValue } = require("./shared/setInputTextValue");
 const moment = require("moment");
 const asyncProcessArray = require("./controllers/asyncProcessArray");
@@ -21,6 +22,11 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     await page.waitForSelector("input#sso_username", { visible: true });
     await setTextInputValue(page, `input#sso_username`, USER_NAME);
     await setTextInputValue(page, `input#ssopassword`, USER_PASSWORD);
+    await mkdirp('screenshots/listOfPeriod/', (err) => {
+      mkdirp('screenshots/periods/', (err) => {
+        console.log(err);
+      });
+    });
     await page.screenshot({
       path: 'screenshots/' + USER_NAME + '.png',
       fullPage: true
