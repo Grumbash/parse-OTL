@@ -8,7 +8,19 @@ const ProjectSchema = new Schema(
     },
     PO: Number,
     name: String,
+    planned: {
+      default: 0,
+      type: Number
+    },
     uiName: {
+      default: "",
+      type: String
+    },
+    PM: {
+      default: "",
+      type: String
+    },
+    uiNameForRead: {
       default: "",
       type: String
     },
@@ -19,5 +31,4 @@ const ProjectSchema = new Schema(
     timestamps: true
   }
 );
-
 module.exports = Project = model("projects", ProjectSchema, "projects");
