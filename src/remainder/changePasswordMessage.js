@@ -1,0 +1,2 @@
+// check date to and
+exports.changePasswordMessageFunc = DaysToEnd => `<div> <p> Please change password for SSO and VPN access. After ${DaysToEnd} days credentials will expires. </p><p> To change your password, click on the link </p><p><span lang="RU"> No links, but you hold on, good mood and health.</span> <br></p></div>`;
