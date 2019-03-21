@@ -7,7 +7,7 @@ module.exports = async ({ page, selector }, periodId, USER_NAME) => {
     const headersSelector = 'table[summary="This table contains column headers corresponding to the data body table below"]';
     //photo
     const screen = await page.screenshot({
-      path: 'screenshots/periods/'+ USER_NAME + '_period-' + periodId + '.png',
+      path: 'screenshots/periods/' + USER_NAME + '_period-' + periodId + '.png',
       fullPage: true,
       encoding: 'base64'
     });
@@ -43,10 +43,14 @@ module.exports = async ({ page, selector }, periodId, USER_NAME) => {
     const ids = [];
     for (const project of projects) {
       const dbProject = await ProjectModel.findOne({ PO: project.PO, period: periodId });
-      const uiNameForProject = await ProjectModel.find({ PO: project.PO }).then(projectsLoc => projectsLoc[0].uiName).catch(error => {
+      let uiNameForProject = await ProjectModel.find({ PO: project.PO }).then(projectsLoc => projectsLoc[0].uiName).catch(error => {
         console.error(error)
         logger.error(error);
-      })
+        return null;
+      });
+      if (uiNameForProject === null) {
+        uiNameForProject = "";
+      }
       if (dbProject) {
         await ProjectModel.findByIdAndUpdate(dbProject.id, { ...project, period: periodId, uiName: uiNameForProject })
         const modifiedProject = await ProjectModel.findById(dbProject.id);
