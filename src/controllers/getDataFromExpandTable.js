@@ -2,6 +2,7 @@ const ProjectModel = require("../models/Project");
 const logger = require("../../logger");
 
 module.exports = async ({ page, selector }, periodId, USER_NAME) => {
+  logger.info({ message: `Getting data from expanded table` });
   try {
     await page.waitForSelector(selector, { visible: true });
     const headersSelector = 'table[summary="This table contains column headers corresponding to the data body table below"]';
@@ -11,7 +12,10 @@ module.exports = async ({ page, selector }, periodId, USER_NAME) => {
       fullPage: true,
       encoding: 'base64'
     });
+
+    logger.info({ message: `Do screenshot 'screenshots/periods/${USER_NAME}_period-${periodId}.png'` });
     // Get metadata from tabel-header
+    logger.info({ message: `Getting metadata from tabel-header` });
     const headers = await page.evaluate((headersSelector) => [...document.querySelectorAll(headersSelector)[1].children[1].children[1].children].map(child => ({ name: child.textContent, index: child.getAttribute("_d_index") })), headersSelector);
 
     const fieldsOrder = {
@@ -21,6 +25,7 @@ module.exports = async ({ page, selector }, periodId, USER_NAME) => {
       total: +headers.find(elem => elem.name.trim().toUpperCase() === "Time Entry Total Hours".toUpperCase()).index,
     }
 
+    logger.info({ message: `Getting projects from table` });
     const projects = await page.evaluate(({ selec, fieldsOrder }) => {
       // Get rows from first table 
       const rows = [...document.querySelectorAll(selec)];
@@ -59,6 +64,7 @@ module.exports = async ({ page, selector }, periodId, USER_NAME) => {
         ids.push(await new ProjectModel({ ...project, period: periodId }).save())
       }
     }
+    logger.info({ message: `Return array projects ids and screens` });
     return [ids, screen];
   } catch (error) {
     logger.error(error);

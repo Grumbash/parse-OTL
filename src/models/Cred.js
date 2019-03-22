@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
-
-const date = moment().add(6, "month").format("MM/DD/YYYY");
+const moment = require("moment");
+const date = moment().add(4, "month").format("MM/DD/YYYY");
 
 const CredSchema = new Schema({
   expire: {
