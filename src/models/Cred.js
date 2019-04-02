@@ -1,8 +1,12 @@
 const { Schema, model } = require("mongoose");
+const moment = require("moment");
+const date = moment().add(4, "month").format("MM/DD/YYYY");
 
 const CredSchema = new Schema({
-  expire: Date,
-
+  expire: {
+    type: Date,
+    default: date
+  },
   vpn: {
     login: {
       default: "",

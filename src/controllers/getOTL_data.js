@@ -1,9 +1,10 @@
 const logger = require("../../logger");
 
 module.exports = async (page, firtsRow = 0) => {
+  logger.info({ message: `Getting OTL data of periods` });
   try {
     await page.waitForSelector("table[summary='Search Results:Time Cards'] > colgroup[span] + tbody");
-
+    logger.info({ message: `Evaluate and return data of periods` });
     return await page.evaluate((firtsRow) => {
       // Get first row data
       const period = document.querySelectorAll("table[summary='Search Results:Time Cards'] > colgroup[span] + tbody > tr > td:nth-child(1)")[firtsRow].textContent;
@@ -15,6 +16,7 @@ module.exports = async (page, firtsRow = 0) => {
         status
       }
     }, firtsRow);
+
   } catch (error) {
     logger.error(error);
     return {
