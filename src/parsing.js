@@ -8,7 +8,7 @@ const logger = require ('../logger');
 
 async function parsing ({URL, USER_NAME, USER_PASSWORD}, userId) {
   const browser = await puppeteer.launch ({
-    headless: false,
+    headless: true,
     defaultViewport: {
       width: 1920,
       height: 1080,
