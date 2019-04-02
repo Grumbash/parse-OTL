@@ -32,9 +32,8 @@ const randomSec = "00",
 const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWeek}`, async () => {
 
 });
-
 // Dev mod
-(async () => {
+setTimeout(async () => {
   const users = await CredModel.find({ role: "user" });
 
   await cmd(process.env.CMD_COMMAND_START);
@@ -49,7 +48,7 @@ const job = new CronJob(`${randomSec} ${randomMin} ${randonHour} * * ${daysOfWee
   }
   await cmd(process.env.CMD_COMMAND_STOP);
   logger.info({ message: finishOutput })
-})();
+}, 1000);
 
 
 
