@@ -5,7 +5,13 @@
 - [download nodeJS](https://nodejs.org/)
 - clone that repository 
 - create a `.env` file, with parameters this repository owner shared with you, in the __root directory__ 
-- create a file with name `pass.txt` and specify the __absolute path__ to it in the `.env` file 
+- create a file with name `pass.txt`
+- in `pass.txt` write your VPN credentials at following the format
+```
+VPN_USERNAME
+VPN_PASSWORD
+```
+- specify the __absolute path__ to `pass.txt` in the `.env` file 
 - move to the root directory of the project and type: `npm install && npm run start`
 - wait for all dependencies are installing 
 Afterwards, you should see next: 
