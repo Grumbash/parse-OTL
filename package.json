@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "debug": "nodemon --inspect=127.0.0.1:9228 index.js"
+    "debug": "nodemon --inspect=127.0.0.1:9228 index.js",
+    "detach": "forever start index.js",
+    "list": "forever list",
+    "stopall": "forever stopall"
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,7 @@
     "cmd": "^0.1.0",
     "cron": "^1.6.0",
     "dotenv": "^6.2.0",
+    "forever": "^1.0.0",
     "moment": "^2.24.0",
     "mongoose": "^5.4.1",
     "node-cmd": "^3.0.0",
