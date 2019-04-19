@@ -1,63 +1,69 @@
-require ('dotenv/config');
+require("dotenv/config");
 
-const CronJob = require ('cron').CronJob;
-const startParsing = require ('./asyncWeeksCycle');
-const mongoose = require ('mongoose');
-const CredModel = require ('./src/models/Cred');
-const finishOutput = require ('./src/shared/consoleOutput');
-const cmd = require ('./src/shared/cmdPromise');
-const logger = require ('./logger');
+const CronJob = require("cron").CronJob;
+const startParsing = require("./asyncWeeksCycle");
+const mongoose = require("mongoose");
+const CredModel = require("./src/models/Cred");
+const finishOutput = require("./src/shared/consoleOutput");
+const cmd = require("./src/shared/cmdPromise");
+const logger = require("./logger");
 
-const {URL} = process.env;
+const { URL } = process.env;
 
 mongoose.Promise = Promise;
 mongoose
-  .connect (process.env.DB_URL, {
-    useNewUrlParser: true,
+  .connect(process.env.DB_URL, {
+    useNewUrlParser: true
   })
-  .then (() => logger.info ({message: 'MongoDB Connected'}))
-  .catch (err => logger.error (err));
+  .then(() => logger.info({ message: "MongoDB Connected" }))
+  .catch(err => logger.error(err));
 
-const randomSec = '00', randomMin = '*/20', randonHour = '*', daysOfWeek = '*';
-const job = new CronJob (
-  `${randomSec} ${randomMin} ${randonHour} * * ${daysOfWeek}`,
+const cronSec = "00",
+  cronMin = "5",
+  cronHour = "7",
+  daysOfWeek = "1-5";
+const job = new CronJob(
+  `${cronSec} ${cronMin} ${cronHour} * * ${daysOfWeek}`,
   async () => {
-    // console.log("Script has started");
-    // const users = await CredModel.find({ role: "user" });
-    // await cmd(process.env.CMD_COMMAND_START);
-    // for (const user of users) {
-    //   try {
-    //     await startParsing({ USER_NAME: user.sso.login, USER_PASSWORD: user.sso.password }, URL);
-    //   } catch (error) {
-    //     logger.error(error);
-    //   }
-    // }
-    // await cmd(process.env.CMD_COMMAND_STOP);
-    // logger.info({ message: finishOutput })
+    console.log("Script has started");
+    const users = await CredModel.find({ role: "user" });
+    await cmd(process.env.CMD_COMMAND_START);
+    for (const user of users) {
+      try {
+        await startParsing(
+          { USER_NAME: user.sso.login, USER_PASSWORD: user.sso.password },
+          URL
+        );
+      } catch (error) {
+        logger.error(error);
+      }
+    }
+    await cmd(process.env.CMD_COMMAND_STOP);
+    logger.info({ message: finishOutput });
   }
 );
 // Dev mod
 
-setTimeout (async () => {
-  console.log ('Script has started');
-  const users = await CredModel.find ({role: 'user'});
+// setTimeout (async () => {
+//   console.log ('Script has started');
+//   const users = await CredModel.find ({role: 'user'});
 
-  await cmd (process.env.CMD_COMMAND_START);
+//   await cmd (process.env.CMD_COMMAND_START);
 
-  for (const user of users) {
-    try {
-      await startParsing (
-        {USER_NAME: user.sso.login, USER_PASSWORD: user.sso.password},
-        URL
-      );
-    } catch (error) {
-      logger.error (error);
-    }
-  }
+//   for (const user of users) {
+//     try {
+//       await startParsing (
+//         {USER_NAME: user.sso.login, USER_PASSWORD: user.sso.password},
+//         URL
+//       );
+//     } catch (error) {
+//       logger.error (error);
+//     }
+//   }
 
-  await cmd (process.env.CMD_COMMAND_STOP);
+//   await cmd (process.env.CMD_COMMAND_STOP);
 
-  logger.info ({message: finishOutput});
-}, 10000);
+//   logger.info ({message: finishOutput});
+// }, 10000);
 
-job.start ();
+job.start();
