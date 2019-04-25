@@ -8,7 +8,7 @@ const logger = require ('../logger');
 
 async function parsing ({URL, USER_NAME, USER_PASSWORD}, userId) {
   const browser = await puppeteer.launch ({
-    headless: true,
+	headless: true,
     defaultViewport: {
       width: 1920,
       height: 1080,
@@ -20,7 +20,7 @@ async function parsing ({URL, USER_NAME, USER_PASSWORD}, userId) {
 
   try {
     const page = await browser.newPage ();
-    page.setDefaultTimeout (120000);
+    page.setDefaultTimeout (900000);
     await page.goto (URL, {
       waitUntil: ['networkidle0', 'domcontentloaded'],
     });
