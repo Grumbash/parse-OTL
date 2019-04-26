@@ -42,28 +42,5 @@ const job = new CronJob(
     logger.info({ message: finishOutput });
   }
 );
-// Dev mod
-
-// setTimeout (async () => {
-//   console.log ('Script has started');
-//   const users = await CredModel.find ({role: 'user'});
-
-//   await cmd (process.env.CMD_COMMAND_START);
-
-//   for (const user of users) {
-//     try {
-//       await startParsing (
-//         {USER_NAME: user.sso.login, USER_PASSWORD: user.sso.password},
-//         URL
-//       );
-//     } catch (error) {
-//       logger.error (error);
-//     }
-//   }
-
-//   await cmd (process.env.CMD_COMMAND_STOP);
-
-//   logger.info ({message: finishOutput});
-// }, 10000);
 
 job.start();

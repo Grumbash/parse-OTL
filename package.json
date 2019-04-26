@@ -9,7 +9,8 @@
     "debug": "nodemon --inspect=127.0.0.1:9228 index.js",
     "detach": "forever start index.js",
     "list": "forever list",
-    "stopall": "forever stopall"
+    "stopall": "forever stopall",
+    "force": "node forceStart.js"
   },
   "repository": {
     "type": "git",
