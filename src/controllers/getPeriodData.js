@@ -32,7 +32,7 @@ module.exports = async (page, weekNo, userId, USER_NAME) => {
 
     // Get data for the week
     logger.info({ message: `Get data for the week` });
-    const ExpandTableSelector = "table[summary='Time Card Entries'] tr.xeq > td:nth-child(2) tr";
+    const ExpandTableSelector = "table[summary='Time Card Entries'] tr.xep > td:nth-child(2) tr";
     const [projectsIds, screenshot] = await getDataFromExpandTable({ page, selector: ExpandTableSelector }, newPeriod.id, USER_NAME);
 
     // Go back to main table
