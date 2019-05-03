@@ -1,6 +1,5 @@
 require("dotenv/config");
 
-const CronJob = require("cron").CronJob;
 const startParsing = require("./asyncWeeksCycle");
 const mongoose = require("mongoose");
 const CredModel = require("./src/models/Cred");
@@ -40,4 +39,5 @@ setTimeout(async () => {
   await cmd(process.env.CMD_COMMAND_STOP);
 
   logger.info({ message: finishOutput });
+  process.exit();
 }, 0);
