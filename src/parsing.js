@@ -78,10 +78,10 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
     // Code below for picking data in particular period
 
     const firstDayOfMonth = moment(new Date())
-      .subtract(5, "month")
+      .subtract(1, "month")
       .startOf("month")
       .format("MM/DD/YY");
-    const lastDayOfMonth = moment(new Date()).subtract(5, "month")
+    const lastDayOfMonth = moment(new Date()))
       .endOf("month")
       .format("MM/DD/YY");
     await page.waitForSelector("tr[style] > td:nth-child(3) > button", {
