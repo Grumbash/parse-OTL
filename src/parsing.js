@@ -81,7 +81,7 @@ async function parsing({ URL, USER_NAME, USER_PASSWORD }, userId) {
       .subtract(1, "month")
       .startOf("month")
       .format("MM/DD/YY");
-    const lastDayOfMonth = moment(new Date()))
+    const lastDayOfMonth = moment(new Date())
       .endOf("month")
       .format("MM/DD/YY");
     await page.waitForSelector("tr[style] > td:nth-child(3) > button", {
